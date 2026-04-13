@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sloh Master</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Studijní hra pro češtinu</p>
+        <h1>Sloh Master</h1>
+        <p class="subtitle">Procvič si vypravování, líčení, úvahu, charakteristiku a recenzi pomocí přehledu, kvízu a stavby slohu.</p>
+      </div>
+      <div class="score-card">
+        <span>Skóre</span>
+        <strong id="total-score">0</strong>
+        <small id="score-message">Začni studovat a sbírej body.</small>
+        <button id="dark-mode-toggle" class="dark-toggle" type="button" aria-pressed="false">🌙 Tmavý</button>
+      </div>
+    </header>
+
+    <nav class="tabs" aria-label="Režimy aplikace">
+      <button class="tab active" data-tab="prehled">Přehled</button>
+      <button class="tab" data-tab="kviz">Kvíz</button>
+      <button class="tab" data-tab="stavba">Stavba slohu</button>
+      <button class="tab" data-tab="trener">Trenér psaní</button>
+      <button class="tab" data-tab="karticky">Kartičky</button>
+    </nav>
+
+    <main>
+      <section class="panel active" id="prehled-panel">
+        <div class="section-header">
+          <div>
+            <h2>Rychlý přehled útvarů</h2>
+            <p>Klikni na útvar a zapamatuj si jeho hlavní znaky.</p>
+          </div>
+          <select id="genre-select" aria-label="Vyber útvar"></select>
+        </div>
+        <article class="study-card" id="study-card"></article>
+      </section>
+
+      <section class="panel" id="kviz-panel">
+        <div class="section-header">
+          <div>
+            <h2>Poznávací kvíz</h2>
+            <p>Poznej útvar podle nápovědy a získávej body.</p>
+          </div>
+          <div class="kviz-controls">
+            <span id="quiz-stats" class="quiz-stats-badge">Zatím bez odpovědí</span>
+            <button id="quiz-reset-stats" class="secondary-button ghost-button" title="Vynulovat statistiky">Resetovat</button>
+            <button id="next-quiz" class="secondary-button">Další otázka</button>
+          </div>
+        </div>
+        <div class="quiz-box">
+          <p class="quiz-label">Nápověda</p>
+          <h3 id="quiz-question"></h3>
+          <div id="quiz-options" class="option-grid"></div>
+          <p id="quiz-feedback" class="feedback"></p>
+        </div>
+      </section>
+
+      <section class="panel" id="stavba-panel">
+        <div class="section-header">
+          <div>
+            <h2>Stavba slohu</h2>
+            <p>Vyber správný úvod, stať a závěr ke zvolenému útvaru.</p>
+          </div>
+          <button id="new-structure" class="secondary-button">Nové zadání</button>
+        </div>
+        <div class="structure-box">
+          <h3 id="structure-title"></h3>
+          <div class="structure-grid">
+            <div>
+              <p class="quiz-label">Úvod</p>
+              <div id="intro-options" class="stacked-options"></div>
+            </div>
+            <div>
+              <p class="quiz-label">Stať</p>
+              <div id="body-options" class="stacked-options"></div>
+            </div>
+            <div>
+              <p class="quiz-label">Závěr</p>
+              <div id="ending-options" class="stacked-options"></div>
+            </div>
+          </div>
+          <p id="structure-feedback" class="feedback"></p>
+        </div>
+      </section>
+
+      <section class="panel" id="trener-panel">
+        <div class="section-header">
+          <div>
+            <h2>Trenér psaní</h2>
+            <p>Vylosuj si maturitní téma, napiš draft a nech si ho orientačně vyhodnotit.</p>
+          </div>
+          <button id="new-prompt" class="secondary-button">Vylosovat téma</button>
+        </div>
+        <div class="prompt-box">
+          <div id="prompt-content"></div>
+          <div class="info-grid">
+            <div class="info-pill words-pill">
+              <span class="pill-title">Počet slov</span>
+              <div class="words-row">
+                <div class="words-stat">
+                  <span class="stat-caption">Minimum</span>
+                  <strong>250</strong>
+                  <small>slov</small>
+                </div>
+                <div class="words-stat current-stat">
+                  <span class="stat-caption">Aktuálně</span>
+                  <strong id="word-counter">0</strong>
+                  <small>slov</small>
+                </div>
+              </div>
+              <div class="word-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                <div id="word-progress-bar" class="word-progress-fill"></div>
+              </div>
+            </div>
+            <div class="info-pill timer-pill">
+              <span class="pill-title">Trénink nanečisto</span>
+              <div class="timer-row">
+                <div class="timer-display">
+                  <span class="stat-caption">Odpočet</span>
+                  <strong id="mock-exam-timer">60:00</strong>
+                </div>
+                <div class="timer-controls">
+                  <div class="timer-presets" aria-label="Vyber délku odpočtu času">
+                    <button class="timer-preset" data-minutes="30" type="button">30</button>
+                    <button class="timer-preset active" data-minutes="60" type="button">60</button>
+                    <button class="timer-preset" data-minutes="110" type="button">110</button>
+                  </div>
+                  <button id="mock-exam-toggle" class="timer-start-button" type="button">Start</button>
+                </div>
+              </div>
+              <p id="mock-exam-verdict" class="timer-note">Vyber délku a spusť odpočet času.</p>
+            </div>
+          </div>
+
+          <label for="essay-text">Můj sloh</label>
+          <textarea id="essay-text" rows="12" placeholder="Sem napiš celý text slohu. Ideálně do odstavců: úvod, stať, závěr."></textarea>
+
+          <div class="tip-box evaluation-tips" id="quick-warnings">
+            <span>Rychlá jazyková kontrola</span>
+            <ul id="quick-warnings-list"></ul>
+          </div>
+
+          <div class="prompt-actions">
+            <button id="evaluate-writing" class="secondary-button">Vyhodnotit sloh</button>
+            <button id="copy-essay" class="secondary-button ghost-button">📋 Zkopírovat</button>
+            <button id="download-essay" class="secondary-button ghost-button">⬇ Uložit jako PDF</button>
+            <button id="clear-writing" class="secondary-button ghost-button">Vymazat text</button>
+          </div>
+
+          <div class="evaluation-box" id="evaluation-box">
+            <div class="evaluation-summary">
+              <p class="quiz-label">Orientační výsledek</p>
+              <h3 id="evaluation-score">Zatím nevyhodnoceno</h3>
+              <p id="evaluation-band" class="feedback">Napiš draft a spusť kontrolu.</p>
+            </div>
+            <div id="evaluation-breakdown" class="evaluation-grid"></div>
+            <div id="evaluation-tips" class="tip-box evaluation-tips"></div>
+          </div>
+
+          <label for="notes">Poznámky k osnově</label>
+          <textarea id="notes" rows="6" placeholder="Sem si napiš osnovu, argumenty, klíčová slova nebo co chceš při přepisu zlepšit..."></textarea>
+
+          <div class="history-box">
+            <div class="section-header compact-header">
+              <div>
+                <h3>Historie pokusů</h3>
+                <p>Poslední vyhodnocené pokusy a jejich orientační výsledky.</p>
+              </div>
+            </div>
+            <div id="history-list" class="history-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="karticky-panel">
+        <div class="section-header">
+          <div>
+            <h2>Kartičky</h2>
+            <p>Klikni na kartičku a odhal odpověď. Procvič si klíčové znaky všech útvarů.</p>
+          </div>
+          <div class="fc-controls">
+            <span id="flashcard-counter" class="quiz-stats-badge">1 / 25</span>
+            <button id="fc-shuffle" class="secondary-button ghost-button">🔀 Zamíchat</button>
+          </div>
+        </div>
+        <div class="flashcard-area">
+          <div id="flashcard-inner" class="flashcard" role="button" tabindex="0" aria-label="Kartička, kliknutím otoč">
+            <div class="flashcard-face flashcard-front">
+              <span class="fc-label">Otázka</span>
+              <p id="flashcard-front-text"></p>
+            </div>
+            <div class="flashcard-face flashcard-back">
+              <span class="fc-label">Odpověď</span>
+              <p id="flashcard-back-text"></p>
+            </div>
+          </div>
+          <div class="fc-nav">
+            <button id="fc-prev" class="secondary-button">← Předchozí</button>
+            <button id="fc-flip" class="secondary-button">Otočit kartičku</button>
+            <button id="fc-next" class="secondary-button">Další →</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.9/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.9/vfs_fonts.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
