@@ -16,5 +16,6 @@ Jednoduchá studijní webová hra pro procvičování literárních útvarů:
 
 ## Spuštění
 Stačí otevřít soubor `index.html` v prohlížeči.
+https://jakubb213.github.io/SLOHOVKA/
 
 Pokud chceš pohodlnější lokální spuštění přes server, můžeš ve VS Code použít například rozšíření Live Server.
